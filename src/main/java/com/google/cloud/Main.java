@@ -24,13 +24,15 @@ import java.sql.Statement;
 
 public class Main {
 
+  private static final String HOST = "staging-wrenchworks.sandbox.googleapis.com";
   private static final String PROJECT_ID = "my-project";
   private static final String INSTANCE_ID = "my-instance";
   private static final String DATABASE_ID = "my-database";
 
   public static void main(String[] args) throws SQLException {
     final String url = String.format(
-        "jdbc:cloudspanner:/projects/%s/instances/%s/databases/%s?dialect=postgresql",
+        "jdbc:cloudspanner://%s/projects/%s/instances/%s/databases/%s?dialect=postgresql",
+        HOST,
         PROJECT_ID,
         INSTANCE_ID,
         DATABASE_ID
