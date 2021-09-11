@@ -2,6 +2,16 @@
 
 set -e
 
+if ! command -v mvn &>/dev/null; then
+	cat <<EOF
+Please install Maven!
+
+Linux:  sudo apt install -y maven
+Mac:  brew install maven
+EOF
+	exit
+fi
+
 CLIENT_VERSION="6.10.2-pg-SNAPSHOT"
 JDBC_VERSION="2.2.7-pg-SNAPSHOT"
 GRPC_BASE_PATH="artifacts/com/google/api/grpc"
