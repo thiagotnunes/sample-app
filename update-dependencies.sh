@@ -2,20 +2,13 @@
 
 set -e
 
-if ! command -v mvn &>/dev/null; then
-	cat <<EOF
-Please install Maven!
-
-Linux:  sudo apt install -y maven
-Mac:  brew install maven
-EOF
-	exit
-fi
-
 CLIENT_VERSION="6.12.4-pg-SNAPSHOT"
 JDBC_VERSION="2.4.4-pg-SNAPSHOT"
-GRPC_BASE_PATH="artifacts/com/google/api/grpc"
-CLOUD_BASE_PATH="artifacts/com/google/cloud"
+ARTIFACTS="${PWD}/artifacts"
+MAVEN="${HOME}/.m2/repository"
+
+GRPC_BASE_PATH="com/google/api/grpc"
+CLOUD_BASE_PATH="com/google/cloud"
 
 PROTO_GOOGLE_CLOUD_SPANNER_ADMIN_DATABASE="proto-google-cloud-spanner-admin-database-v1"
 PROTO_GOOGLE_CLOUD_SPANNER_ADMIN_INSTANCE="proto-google-cloud-spanner-admin-instance-v1"
@@ -41,13 +34,16 @@ declare -a dependencies=(
 
 for (( i=0; i<${#dependencies[@]}; i++));
 do
+  DIR="$(dirname ${dependencies[i]})"
+  FILE="$(basename ${dependencies[i]})"
   JAR_FILE="${dependencies[i]}.jar"
   POM_FILE="${dependencies[i]}.pom"
 
-  echo "Installing ${dependencies[i]}..."
-  mvn install:install-file -Dfile=${JAR_FILE} -DpomFile=${POM_FILE}
+  echo "Copying ${FILE}..."
+  mkdir -p "${ARTIFACTS}/${DIR}"
+  cp "${MAVEN}/${JAR_FILE}" "${ARTIFACTS}/${JAR_FILE}"
+  cp "${MAVEN}/${POM_FILE}" "${ARTIFACTS}/${POM_FILE}"
 done
 
-mvn compile
-
 echo "Done"
+
